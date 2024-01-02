@@ -12,12 +12,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.shell.ShellApplicationRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import java.sql.*;
 @SpringBootApplication
 @Slf4j
 public class Application {
@@ -86,7 +88,45 @@ class DatabaseS implements DatabaseService{
 class UserS implements UserService{
     @Override
     public long register(RegisterUserReq req) {
-        return 0;
+        String password = req.getPassword();
+        String qq = req.getQq();
+        String wechat = req.getWechat();
+        String name = req.getName();
+        RegisterUserReq.Gender sex = req.getSex();
+        String birthday = req.getBirthday();
+        String sign = req.getSign();
+        long mid = (long) -1;
+        if(checknotnull(password) && checknotnull(name) && checksex(sex) && checkbirthday(birthday)){
+            //缺了验证qq和wechat唯一性
+
+            mid = (long) 00;//不知道怎么生成新的mid
+        }
+        return mid;
+    }
+    public boolean checkbirthday(String birthday){
+        int l = birthday.length();
+        String day = birthday.substring(l-1,l);
+        String m1 = birthday.substring(0,1);
+        String m2 = birthday.substring(1,2);
+        if(day.equals("日") && (m1.equals("月") || m2.equals("月")) && checknotnull(birthday)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    public boolean checksex(RegisterUserReq.Gender sex){
+        if(sex== RegisterUserReq.Gender.MALE || sex == RegisterUserReq.Gender.FEMALE || sex == RegisterUserReq.Gender.UNKNOWN){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    public boolean checknotnull(String item){
+        if(item.length()==0 || item.equals(null)){
+            return false;
+        }else {
+            return true;
+        }
     }
 
     @Override
@@ -101,6 +141,7 @@ class UserS implements UserService{
 
     @Override
     public UserInfoResp getUserInfo(long mid) {
+//        Connection con =
         return null;
     }
 }
