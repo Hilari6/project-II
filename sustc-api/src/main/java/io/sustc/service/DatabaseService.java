@@ -6,6 +6,8 @@ import io.sustc.dto.VideoRecord;
 
 import java.util.List;
 
+import java.sql.*;
+
 public interface DatabaseService {
 
     /**
